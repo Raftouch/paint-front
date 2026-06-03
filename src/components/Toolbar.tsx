@@ -9,6 +9,7 @@ export default function Toolbar() {
         <Button imageName="circle" />
         <Button imageName="eraser" />
         <Button imageName="line" />
+        <input type="color" />
       </div>
 
       <div className="space-x-4 flex items-center">
