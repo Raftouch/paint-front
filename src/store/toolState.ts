@@ -1,9 +1,10 @@
 import { makeAutoObservable } from "mobx";
+import type Tool from "../tools/Tool";
 
-type Tool = "brush" | "rectangle" | "circle" | "eraser" | "line";
+// type Tool = "brush" | "rectangle" | "circle" | "eraser" | "line";
 
 class ToolState {
-  tool: Tool = "brush";
+  tool: Tool | null = null;
 
   constructor() {
     makeAutoObservable(this);
