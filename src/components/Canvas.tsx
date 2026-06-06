@@ -1,6 +1,8 @@
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef } from "react";
 import canvasState from "../store/canvasState";
+import toolState from "../store/toolState";
+import Brush from "../tools/Brush";
 
 function Canvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -8,7 +10,9 @@ function Canvas() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     canvasState.setCanvas(canvas);
+    toolState.setTool(new Brush(canvas));
   }, []);
 
   return (
