@@ -1,3 +1,4 @@
+import getMousePosition from "../utils/canvas";
 import Tool from "./Tool";
 
 export default class Brush extends Tool {
@@ -21,18 +22,18 @@ export default class Brush extends Tool {
   mouseDownHandler(e: MouseEvent) {
     this.isDrawing = true;
 
-    const rect = this.canvas.getBoundingClientRect();
+    const { x, y } = getMousePosition(this.canvas, e);
 
     this.ctx.beginPath();
-    this.ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    this.ctx.moveTo(x, y);
   }
 
   mouseMoveHandler(e: MouseEvent) {
     if (!this.isDrawing) return;
 
-    const rect = this.canvas.getBoundingClientRect();
+    const { x, y } = getMousePosition(this.canvas, e);
 
-    this.draw(e.clientX - rect.left, e.clientY - rect.top);
+    this.draw(x, y);
   }
 
   draw(x: number, y: number) {
