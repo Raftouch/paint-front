@@ -5,6 +5,7 @@ export default class Rect extends Tool {
   private isDrawing = false;
   private startX = 0;
   private startY = 0;
+  private saved: string | null = null;
 
   constructor(canvas: HTMLCanvasElement) {
     super(canvas);
@@ -23,13 +24,14 @@ export default class Rect extends Tool {
 
   mouseDownHandler(e: MouseEvent) {
     this.isDrawing = true;
+    this.ctx.beginPath();
 
     const { x, y } = getMousePosition(this.canvas, e);
 
     this.startX = x;
     this.startY = y;
 
-    this.ctx.beginPath();
+    this.saved = this.canvas.toDataURL();
   }
 
   mouseMoveHandler(e: MouseEvent) {
@@ -44,9 +46,18 @@ export default class Rect extends Tool {
   }
 
   draw(x: number, y: number, w: number, h: number) {
-    this.ctx.beginPath();
-    this.ctx.rect(x, y, w, h);
-    this.ctx.fill();
-    this.ctx.stroke();
+    const img = new Image();
+
+    if (!this.saved) return;
+    img.src = this.saved;
+
+    img.onload = () => {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.beginPath();
+      this.ctx.rect(x, y, w, h);
+      this.ctx.fill();
+      this.ctx.stroke();
+    };
   }
 }
