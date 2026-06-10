@@ -10,6 +10,11 @@ export default function Toolbar() {
   const handleBrushClick = () => {
     if (!canvasState.canvas) return;
 
+    const ctx = canvasState.canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.globalCompositeOperation = "source-over";
+
     toolState.setTool(new Brush(canvasState.canvas));
   };
 
