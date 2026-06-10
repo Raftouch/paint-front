@@ -2,6 +2,7 @@ import canvasState from "../store/canvasState";
 import toolState from "../store/toolState";
 import Brush from "../tools/Brush";
 import Circle from "../tools/Circle";
+import Eraser from "../tools/Eraser";
 import Rect from "../tools/Rect";
 import Button from "./Button";
 
@@ -24,13 +25,19 @@ export default function Toolbar() {
     toolState.setTool(new Circle(canvasState.canvas));
   };
 
+  const handleEraserClick = () => {
+    if (!canvasState.canvas) return;
+
+    toolState.setTool(new Eraser(canvasState.canvas));
+  };
+
   return (
     <div className="h-[40px] bg-white flex items-center justify-between shadow-lg p-4">
       <div className="space-x-4 flex items-center">
         <Button imageName="brush" onClick={handleBrushClick} />
         <Button imageName="rect" onClick={handleRectClick} />
         <Button imageName="circle" onClick={handleCircleClick} />
-        {/* <Button imageName="eraser" /> */}
+        <Button imageName="eraser" onClick={handleEraserClick} />
         {/* <Button imageName="line" /> */}
         <input type="color" />
       </div>
