@@ -6,7 +6,6 @@ export default class Eraser extends Tool {
 
   constructor(canvas: HTMLCanvasElement) {
     super(canvas);
-    this.ctx.globalCompositeOperation = "destination-out";
     this.listen();
   }
 
