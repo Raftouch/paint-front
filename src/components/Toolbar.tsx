@@ -4,16 +4,14 @@ import Brush from "../tools/Brush";
 import Circle from "../tools/Circle";
 import Eraser from "../tools/Eraser";
 import Rect from "../tools/Rect";
+import { setCanvasMode } from "../utils/mode";
 import Button from "./Button";
 
 export default function Toolbar() {
   const handleBrushClick = () => {
     if (!canvasState.canvas) return;
 
-    const ctx = canvasState.canvas.getContext("2d");
-    if (!ctx) return;
-
-    ctx.globalCompositeOperation = "source-over";
+    setCanvasMode(canvasState.canvas, "draw");
 
     toolState.setTool(new Brush(canvasState.canvas));
   };
@@ -32,6 +30,8 @@ export default function Toolbar() {
 
   const handleEraserClick = () => {
     if (!canvasState.canvas) return;
+
+    setCanvasMode(canvasState.canvas, "erase");
 
     toolState.setTool(new Eraser(canvasState.canvas));
   };
