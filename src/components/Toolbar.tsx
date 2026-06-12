@@ -3,6 +3,7 @@ import toolState from "../store/toolState";
 import Brush from "../tools/Brush";
 import Circle from "../tools/Circle";
 import Eraser from "../tools/Eraser";
+import Line from "../tools/Line";
 import Rect from "../tools/Rect";
 import { setCanvasMode } from "../utils/mode";
 import Button from "./Button";
@@ -28,6 +29,12 @@ export default function Toolbar() {
     toolState.setTool(new Circle(canvasState.canvas));
   };
 
+  const handleLineClick = () => {
+    if (!canvasState.canvas) return;
+
+    toolState.setTool(new Line(canvasState.canvas));
+  };
+
   const handleEraserClick = () => {
     if (!canvasState.canvas) return;
 
@@ -43,7 +50,7 @@ export default function Toolbar() {
         <Button imageName="rect" onClick={handleRectClick} />
         <Button imageName="circle" onClick={handleCircleClick} />
         <Button imageName="eraser" onClick={handleEraserClick} />
-        {/* <Button imageName="line" /> */}
+        <Button imageName="line" onClick={handleLineClick} />
         <input type="color" />
       </div>
 
