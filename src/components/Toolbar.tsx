@@ -43,6 +43,11 @@ export default function Toolbar() {
     toolState.setTool(new Eraser(canvasState.canvas));
   };
 
+  const changeColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    toolState.setStrokeColor(e.currentTarget.value);
+    toolState.setFillColor(e.currentTarget.value);
+  };
+
   return (
     <div className="h-[40px] bg-white flex items-center justify-between shadow-lg p-4">
       <div className="space-x-4 flex items-center">
@@ -51,7 +56,7 @@ export default function Toolbar() {
         <Button imageName="circle" onClick={handleCircleClick} />
         <Button imageName="eraser" onClick={handleEraserClick} />
         <Button imageName="line" onClick={handleLineClick} />
-        <input type="color" />
+        <input onChange={changeColor} type="color" />
       </div>
 
       <div className="space-x-4 flex items-center">
