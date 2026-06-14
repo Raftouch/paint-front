@@ -18,6 +18,12 @@ export default function SettingsBar() {
         defaultValue={1}
         className="w-16 rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none"
       />
+      <label htmlFor="stroke-color">Stroke color</label>
+      <input
+        onChange={(e) => toolState.setStrokeColor(e.currentTarget.value)}
+        id="stroke-color"
+        type="color"
+      />
     </div>
   );
 }
