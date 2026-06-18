@@ -52,6 +52,10 @@ export default function Toolbar() {
     canvasState.undo();
   };
 
+  const handleRedoClick = () => {
+    canvasState.redo();
+  };
+
   return (
     <div className="h-[40px] bg-white flex items-center justify-between shadow-lg p-4">
       <div className="space-x-4 flex items-center">
@@ -65,7 +69,7 @@ export default function Toolbar() {
 
       <div className="space-x-4 flex items-center">
         <Button imageName="undo" onClick={handleUndoClick} />
-        {/* <Button imageName="redo" /> */}
+        <Button imageName="redo" onClick={handleRedoClick} />
         {/* <Button imageName="save" /> */}
       </div>
     </div>
