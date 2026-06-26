@@ -1,8 +1,10 @@
 import { observer } from "mobx-react-lite";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import canvasState from "../store/canvasState";
+import Modal from "./Modal";
 
 function Canvas() {
+  const [modal, setModal] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -21,6 +23,8 @@ function Canvas() {
 
   return (
     <div className="mt-5 flex justify-center p-4">
+      {modal && <Modal onClose={() => setModal(false)} />}
+
       <canvas
         ref={canvasRef}
         onMouseDown={mouseDownHandler}
