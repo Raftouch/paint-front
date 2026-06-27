@@ -1,21 +1,30 @@
+import type { RefObject } from "react";
+
 interface ModalProps {
+  username: RefObject<HTMLInputElement | null>;
   onClose: () => void;
+  onConnect: () => void;
 }
 
-export default function Modal({ onClose }: ModalProps) {
-  const connect = () => {};
+export default function Modal({ username, onClose, onConnect }: ModalProps) {
   return (
     <>
       <div
         className="fixed bg-black/50 top-0 right-0 left-0 bottom-0"
         onClick={onClose}
       />
-      <div className="fixed flex flex-col min-w-[400px] min-h-[200px] p-10 rounded bg-white text-black top-40 left-1/2 -translate-x-1/2">
-        <h1 className="text-center mb-10">Type you name</h1>
-        <input type="text" />
+      <div className="fixed top-1/2 left-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white p-8 shadow-xl">
+        <h1 className="mb-6 text-center text-2xl font-semibold text-gray-800">
+          Type you name
+        </h1>
+        <input
+          type="text"
+          ref={username}
+          className="mb-5 w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-200"
+        />
         <button
-          className="px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 font-medium"
-          onClick={connect}
+          className="w-full rounded-md bg-green-700 px-4 py-2 font-medium text-white transition hover:bg-green-800 active:scale-[0.98]"
+          onClick={onConnect}
         >
           Enter
         </button>

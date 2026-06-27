@@ -6,6 +6,7 @@ import Modal from "./Modal";
 function Canvas() {
   const [modal, setModal] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const usernameRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -21,9 +22,24 @@ function Canvas() {
     canvasState.pushToUndo(canvas.toDataURL());
   };
 
+  const connectHandler = () => {
+    const username = usernameRef.current?.value;
+    if (!username) return;
+    canvasState.setUsername(username);
+    console.log(username);
+
+    setModal(false);
+  };
+
   return (
     <div className="mt-5 flex justify-center p-4">
-      {modal && <Modal onClose={() => setModal(false)} />}
+      {modal && (
+        <Modal
+          onConnect={connectHandler}
+          username={usernameRef}
+          onClose={() => setModal(false)}
+        />
+      )}
 
       <canvas
         ref={canvasRef}
