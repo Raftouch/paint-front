@@ -2,11 +2,14 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
 import canvasState from "../store/canvasState";
 import Modal from "./Modal";
+import { useParams } from "react-router-dom";
 
 function Canvas() {
   const [modal, setModal] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const usernameRef = useRef<HTMLInputElement | null>(null);
+  const params = useParams();
+  const { id } = params;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -14,6 +17,27 @@ function Canvas() {
 
     canvasState.setCanvas(canvas);
   }, []);
+
+  useEffect(() => {
+    if (!canvasState.username) return;
+
+    const socket = new WebSocket("ws://localhost:4000");
+
+    socket.onopen = () => {
+      console.log("Connection established");
+      socket.send(
+        JSON.stringify({
+          id,
+          username: canvasState.username,
+          method: "connection",
+        }),
+      );
+    };
+
+    socket.onerror = (e) => {
+      console.log("Socket error", e);
+    };
+  }, [canvasState.username]);
 
   const mouseDownHandler = () => {
     const canvas = canvasRef.current;
