@@ -9,7 +9,7 @@ function Canvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const usernameRef = useRef<HTMLInputElement | null>(null);
   const params = useParams();
-  const { sessionId } = params;
+  const { id } = params;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -27,7 +27,7 @@ function Canvas() {
       console.log("Connection established");
       socket.send(
         JSON.stringify({
-          id: sessionId,
+          id,
           username: canvasState.username,
           method: "connection",
         }),
