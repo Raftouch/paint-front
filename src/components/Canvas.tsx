@@ -3,6 +3,18 @@ import { useEffect, useRef, useState } from "react";
 import canvasState from "../store/canvasState";
 import Modal from "./Modal";
 import { useParams } from "react-router-dom";
+import toolState from "../store/toolState";
+import Brush from "../tools/Brush";
+
+type DrawMsg = {
+  method: "draw";
+  id: string;
+  figure: {
+    type: "brush";
+    x: number;
+    y: number;
+  };
+};
 
 function Canvas() {
   const [modal, setModal] = useState(true);
@@ -27,6 +39,9 @@ function Canvas() {
     canvasState.setSocket(socket);
     canvasState.setSessionId(id ?? null);
 
+    if (!canvasRef.current) return;
+    toolState.setTool(new Brush(canvasRef.current, socket, id));
+
     socket.onopen = () => {
       console.log("Connection established");
 
@@ -49,7 +64,7 @@ function Canvas() {
             break;
 
           case "draw":
-            // drawHandler(msg);
+            drawHandler(msg);
             break;
 
           default:
@@ -73,6 +88,20 @@ function Canvas() {
       socket.close();
     };
   }, [canvasState.username, id]);
+
+  const drawHandler = (msg: DrawMsg) => {
+    const figure = msg.figure;
+
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext("2d");
+    if (!ctx) return;
+
+    switch (figure.type) {
+      case "brush":
+        Brush.draw(ctx, figure.x, figure.y);
+        break;
+    }
+  };
 
   const mouseDownHandler = () => {
     const canvas = canvasRef.current;
