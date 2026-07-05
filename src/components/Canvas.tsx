@@ -20,11 +20,16 @@ function Canvas() {
 
   useEffect(() => {
     if (!canvasState.username) return;
+    if (!id) return;
 
     const socket = new WebSocket("ws://localhost:4000");
 
+    canvasState.setSocket(socket);
+    canvasState.setSessionId(id ?? null);
+
     socket.onopen = () => {
       console.log("Connection established");
+
       socket.send(
         JSON.stringify({
           id,
@@ -34,10 +39,40 @@ function Canvas() {
       );
     };
 
+    socket.onmessage = (event: MessageEvent) => {
+      try {
+        const msg = JSON.parse(event.data);
+
+        switch (msg.method) {
+          case "connection":
+            console.log(`User ${msg.username} joined`);
+            break;
+
+          case "draw":
+            // drawHandler(msg);
+            break;
+
+          default:
+            console.log("Unknown message type:", msg);
+        }
+      } catch (err) {
+        console.log("Failed to parse JSON:", event.data);
+        console.error(err);
+      }
+    };
+
     socket.onerror = (e) => {
       console.log("Socket error", e);
     };
-  }, [canvasState.username]);
+
+    socket.onclose = () => {
+      console.log("Socket closed");
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [canvasState.username, id]);
 
   const mouseDownHandler = () => {
     const canvas = canvasRef.current;
