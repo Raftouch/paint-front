@@ -4,8 +4,12 @@ import Tool from "./Tool";
 export default class Brush extends Tool {
   private isDrawing = false;
 
-  constructor(canvas: HTMLCanvasElement) {
-    super(canvas);
+  constructor(
+    canvas: HTMLCanvasElement,
+    socket: WebSocket | null,
+    id: string | null,
+  ) {
+    super(canvas, socket, id);
     this.listen();
   }
 
@@ -33,11 +37,24 @@ export default class Brush extends Tool {
 
     const { x, y } = getMousePosition(this.canvas, e);
 
-    this.draw(x, y);
+    // this.draw(x, y);
+    Brush.draw(this.ctx, x, y);
+
+    this.socket?.send(
+      JSON.stringify({
+        method: "draw",
+        id: this.id,
+        figure: {
+          type: "brush",
+          x: x,
+          y: y,
+        },
+      }),
+    );
   }
 
-  draw(x: number, y: number) {
-    this.ctx.lineTo(x, y);
-    this.ctx.stroke();
+  static draw(ctx: CanvasRenderingContext2D, x: number, y: number) {
+    ctx.lineTo(x, y);
+    ctx.stroke();
   }
 }

@@ -1,9 +1,17 @@
 export default class Tool {
   protected canvas: HTMLCanvasElement;
   protected ctx: CanvasRenderingContext2D;
+  protected socket: WebSocket | null;
+  protected id: string | null;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    socket: WebSocket | null,
+    id: string | null,
+  ) {
     this.canvas = canvas;
+    this.socket = socket;
+    this.id = id;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("No 2D context");

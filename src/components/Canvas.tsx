@@ -3,6 +3,18 @@ import { useEffect, useRef, useState } from "react";
 import canvasState from "../store/canvasState";
 import Modal from "./Modal";
 import { useParams } from "react-router-dom";
+import toolState from "../store/toolState";
+import Brush from "../tools/Brush";
+
+type DrawMsg = {
+  method: "draw";
+  id: string;
+  figure: {
+    type: "brush";
+    x: number;
+    y: number;
+  };
+};
 
 function Canvas() {
   const [modal, setModal] = useState(true);
@@ -20,11 +32,19 @@ function Canvas() {
 
   useEffect(() => {
     if (!canvasState.username) return;
+    if (!id) return;
 
     const socket = new WebSocket("ws://localhost:4000");
 
+    canvasState.setSocket(socket);
+    canvasState.setSessionId(id ?? null);
+
+    if (!canvasRef.current) return;
+    toolState.setTool(new Brush(canvasRef.current, socket, id));
+
     socket.onopen = () => {
       console.log("Connection established");
+
       socket.send(
         JSON.stringify({
           id,
@@ -34,10 +54,55 @@ function Canvas() {
       );
     };
 
+    socket.onmessage = (event: MessageEvent) => {
+      try {
+        const msg = JSON.parse(event.data);
+
+        switch (msg.method) {
+          case "connection":
+            console.log(`User ${msg.username} joined`);
+            break;
+
+          case "draw":
+            drawHandler(msg);
+            break;
+
+          default:
+            console.log("Unknown message type:", msg);
+        }
+      } catch (err) {
+        console.log("Failed to parse JSON:", event.data);
+        console.error(err);
+      }
+    };
+
     socket.onerror = (e) => {
       console.log("Socket error", e);
     };
-  }, [canvasState.username]);
+
+    socket.onclose = () => {
+      console.log("Socket closed");
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [canvasState.username, id]);
+
+  const drawHandler = (msg: DrawMsg) => {
+    const figure = msg.figure;
+
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext("2d");
+    if (!ctx) return;
+
+    switch (figure.type) {
+      case "brush":
+        ctx.beginPath();
+        Brush.draw(ctx, figure.x, figure.y);
+        break;
+    }
+  };
 
   const mouseDownHandler = () => {
     const canvas = canvasRef.current;
