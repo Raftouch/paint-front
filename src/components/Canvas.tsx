@@ -98,6 +98,7 @@ function Canvas() {
 
     switch (figure.type) {
       case "brush":
+        ctx.beginPath();
         Brush.draw(ctx, figure.x, figure.y);
         break;
     }

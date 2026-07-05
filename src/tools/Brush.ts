@@ -38,6 +38,7 @@ export default class Brush extends Tool {
     const { x, y } = getMousePosition(this.canvas, e);
 
     // this.draw(x, y);
+    Brush.draw(this.ctx, x, y);
 
     this.socket?.send(
       JSON.stringify({
