@@ -108,11 +108,11 @@ function Canvas() {
 
     switch (figure.type) {
       case "brush":
-        ctx.beginPath();
+        // ctx.beginPath();
         Brush.draw(ctx, figure.x, figure.y);
         break;
       case "rect":
-        ctx.beginPath();
+        // ctx.beginPath();
         Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height);
         break;
     }
