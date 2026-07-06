@@ -5,15 +5,24 @@ import Modal from "./Modal";
 import { useParams } from "react-router-dom";
 import toolState from "../store/toolState";
 import Brush from "../tools/Brush";
+import Rect from "../tools/Rect";
 
 type DrawMsg = {
   method: "draw";
   id: string;
-  figure: {
-    type: "brush";
-    x: number;
-    y: number;
-  };
+  figure:
+    | {
+        type: "brush";
+        x: number;
+        y: number;
+      }
+    | {
+        type: "rect";
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      };
 };
 
 function Canvas() {
@@ -57,6 +66,7 @@ function Canvas() {
     socket.onmessage = (event: MessageEvent) => {
       try {
         const msg = JSON.parse(event.data);
+        console.log("Received:", msg);
 
         switch (msg.method) {
           case "connection":
@@ -98,8 +108,12 @@ function Canvas() {
 
     switch (figure.type) {
       case "brush":
-        ctx.beginPath();
+        // ctx.beginPath();
         Brush.draw(ctx, figure.x, figure.y);
+        break;
+      case "rect":
+        // ctx.beginPath();
+        Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height);
         break;
     }
   };

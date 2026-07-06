@@ -14,13 +14,17 @@ export default function Toolbar() {
 
     setCanvasMode(canvasState.canvas, "draw");
 
-    toolState.setTool(new Brush(canvasState.canvas));
+    toolState.setTool(
+      new Brush(canvasState.canvas, canvasState.socket, canvasState.sessionid),
+    );
   };
 
   const handleRectClick = () => {
     if (!canvasState.canvas) return;
 
-    toolState.setTool(new Rect(canvasState.canvas));
+    toolState.setTool(
+      new Rect(canvasState.canvas, canvasState.socket, canvasState.sessionid),
+    );
   };
 
   const handleCircleClick = () => {

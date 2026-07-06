@@ -7,8 +7,12 @@ export default class Rect extends Tool {
   private startY = 0;
   private saved: string | null = null;
 
-  constructor(canvas: HTMLCanvasElement) {
-    super(canvas);
+  constructor(
+    canvas: HTMLCanvasElement,
+    socket: WebSocket | null,
+    id: string | null,
+  ) {
+    super(canvas, socket, id);
     this.listen();
   }
 
@@ -18,13 +22,32 @@ export default class Rect extends Tool {
     this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
   }
 
-  mouseUpHandler() {
+  mouseUpHandler(e: MouseEvent) {
     this.isDrawing = false;
+
+    const { x, y } = getMousePosition(this.canvas, e);
+
+    const width = x - this.startX;
+    const height = y - this.startY;
+
+    this.socket?.send(
+      JSON.stringify({
+        method: "draw",
+        id: this.id,
+        figure: {
+          type: "rect",
+          x: this.startX,
+          y: this.startY,
+          width,
+          height,
+        },
+      }),
+    );
   }
 
   mouseDownHandler(e: MouseEvent) {
     this.isDrawing = true;
-    this.ctx.beginPath();
+    // this.ctx.beginPath();
 
     const { x, y } = getMousePosition(this.canvas, e);
 
@@ -59,5 +82,18 @@ export default class Rect extends Tool {
       this.ctx.fill();
       this.ctx.stroke();
     };
+  }
+
+  static staticDraw(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+  ) {
+    ctx.beginPath();
+    ctx.rect(x, y, w, h);
+    ctx.fill();
+    ctx.stroke();
   }
 }
