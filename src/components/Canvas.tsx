@@ -22,6 +22,7 @@ type DrawMsg = {
         y: number;
         width: number;
         height: number;
+        color: string;
       };
 };
 
@@ -113,7 +114,14 @@ function Canvas() {
         break;
       case "rect":
         // ctx.beginPath();
-        Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height);
+        Rect.staticDraw(
+          ctx,
+          figure.x,
+          figure.y,
+          figure.width,
+          figure.height,
+          figure.color,
+        );
         break;
     }
   };
