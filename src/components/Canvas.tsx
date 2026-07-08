@@ -15,6 +15,7 @@ type DrawMsg = {
         type: "brush";
         x: number;
         y: number;
+        color: string;
       }
     | {
         type: "rect";
@@ -110,7 +111,7 @@ function Canvas() {
     switch (figure.type) {
       case "brush":
         // ctx.beginPath();
-        Brush.draw(ctx, figure.x, figure.y);
+        Brush.draw(ctx, figure.x, figure.y, figure.color);
         break;
       case "rect":
         // ctx.beginPath();
