@@ -28,8 +28,23 @@ export default class Brush extends Tool {
 
     const { x, y } = getMousePosition(this.canvas, e);
 
+    const color = this.ctx.strokeStyle as string;
+
     this.ctx.beginPath();
     this.ctx.moveTo(x, y);
+
+    this.socket?.send(
+      JSON.stringify({
+        method: "draw",
+        id: this.id,
+        figure: {
+          type: "brush-start",
+          x,
+          y,
+          color,
+        },
+      }),
+    );
   }
 
   mouseMoveHandler(e: MouseEvent) {
@@ -37,8 +52,10 @@ export default class Brush extends Tool {
 
     const { x, y } = getMousePosition(this.canvas, e);
 
+    const color = this.ctx.strokeStyle as string;
+
     // this.draw(x, y);
-    Brush.draw(this.ctx, x, y);
+    Brush.draw(this.ctx, x, y, color);
 
     this.socket?.send(
       JSON.stringify({
@@ -48,13 +65,22 @@ export default class Brush extends Tool {
           type: "brush",
           x: x,
           y: y,
+          color: color,
         },
       }),
     );
   }
 
-  static draw(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  static draw(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    color: string,
+  ) {
+    ctx.strokeStyle = color;
     ctx.lineTo(x, y);
     ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
   }
 }

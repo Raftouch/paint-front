@@ -12,9 +12,16 @@ type DrawMsg = {
   id: string;
   figure:
     | {
+        type: "brush-start";
+        x: number;
+        y: number;
+        color: string;
+      }
+    | {
         type: "brush";
         x: number;
         y: number;
+        color: string;
       }
     | {
         type: "rect";
@@ -22,6 +29,7 @@ type DrawMsg = {
         y: number;
         width: number;
         height: number;
+        color: string;
       };
 };
 
@@ -107,13 +115,27 @@ function Canvas() {
     if (!ctx) return;
 
     switch (figure.type) {
+      case "brush-start":
+        ctx.beginPath();
+        ctx.strokeStyle = figure.color;
+        ctx.moveTo(figure.x, figure.y);
+        break;
+
       case "brush":
         // ctx.beginPath();
-        Brush.draw(ctx, figure.x, figure.y);
+        Brush.draw(ctx, figure.x, figure.y, figure.color);
         break;
+
       case "rect":
         // ctx.beginPath();
-        Rect.staticDraw(ctx, figure.x, figure.y, figure.width, figure.height);
+        Rect.staticDraw(
+          ctx,
+          figure.x,
+          figure.y,
+          figure.width,
+          figure.height,
+          figure.color,
+        );
         break;
     }
   };
