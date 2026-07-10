@@ -33,6 +33,10 @@ type DrawMsg = {
       };
 };
 
+type imgData = {
+  img: string;
+};
+
 function Canvas() {
   const [modal, setModal] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -40,12 +44,35 @@ function Canvas() {
   const params = useParams();
   const { id } = params;
 
+  const getImage = async () => {
+    if (!id) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const res = await fetch(`http://localhost:4000/image?id=${id}`);
+    const data: imgData = await res.json();
+
+    const img = new Image();
+    img.src = data.img;
+
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     canvasState.setCanvas(canvas);
-  }, []);
+
+    getImage();
+  }, [id]);
 
   useEffect(() => {
     if (!canvasState.username) return;
