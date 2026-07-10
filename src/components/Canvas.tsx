@@ -140,11 +140,27 @@ function Canvas() {
     }
   };
 
-  const mouseDownHandler = () => {
+  const mouseDownHandler = async () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     canvasState.pushToUndo(canvas.toDataURL());
+
+    try {
+      const res = await fetch(`http://localhost:4000/image?id=${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          img: canvas.toDataURL(),
+        }),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const connectHandler = () => {
