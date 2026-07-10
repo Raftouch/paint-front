@@ -60,6 +60,18 @@ export default function Toolbar() {
     canvasState.redo();
   };
 
+  const download = () => {
+    if (!canvasState.canvas) return;
+
+    const dataUrl = canvasState.canvas.toDataURL();
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = canvasState.sessionid + ".png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <div className="h-[40px] bg-white flex items-center justify-between shadow-lg p-4">
       <div className="space-x-4 flex items-center">
@@ -74,7 +86,7 @@ export default function Toolbar() {
       <div className="space-x-4 flex items-center">
         <Button imageName="undo" onClick={handleUndoClick} />
         <Button imageName="redo" onClick={handleRedoClick} />
-        {/* <Button imageName="save" /> */}
+        <Button imageName="save" onClick={download} />
       </div>
     </div>
   );
