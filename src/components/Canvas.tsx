@@ -6,36 +6,8 @@ import { useParams } from "react-router-dom";
 import toolState from "../store/toolState";
 import Brush from "../tools/Brush";
 import Rect from "../tools/Rect";
-
-type DrawMsg = {
-  method: "draw";
-  id: string;
-  figure:
-    | {
-        type: "brush-start";
-        x: number;
-        y: number;
-        color: string;
-      }
-    | {
-        type: "brush";
-        x: number;
-        y: number;
-        color: string;
-      }
-    | {
-        type: "rect";
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        color: string;
-      };
-};
-
-type imgData = {
-  img: string;
-};
+import type { DrawMsg } from "../types/draw";
+import type { ImgData } from "../types/img";
 
 function Canvas() {
   const [modal, setModal] = useState(true);
@@ -54,7 +26,7 @@ function Canvas() {
     if (!ctx) return;
 
     const res = await fetch(`http://localhost:4000/image?id=${id}`);
-    const data: imgData = await res.json();
+    const data: ImgData = await res.json();
 
     const img = new Image();
     img.src = data.img;
